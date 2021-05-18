@@ -1,0 +1,18 @@
+.app {
+	display: grid;
+	place-items: center;
+	height: 100vh;
+}
+.app > form {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	width: 200px;
+}
+.app > form > label > input {
+	width: 200px;
+}
+.app > form > button {
+	width: 200px;
+}
