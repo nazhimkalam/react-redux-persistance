@@ -1,14 +1,21 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { createStore, combineReducers } from 'redux';
 import userReducer from '../features/userSlice';
-import { loadFromLocalStorage, saveToLocalStorage } from './redux-persist';
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 
-const persistedState = loadFromLocalStorage();
+// whitelist and blacklist are properties of react redux which allows user to select which reducer needs to be persisted and which not to
+const persistConfig = {
+	key: 'root',
+	storage,
+	whitelist: ['user'],
+};
 
-export const store = configureStore({
-	reducer: {
-		user: userReducer,
-	},
-	preloadedState: persistedState,
+const rootReducer = combineReducers({
+	user: userReducer,
 });
 
-store.subscribe(() => saveToLocalStorage(store.getState()));
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+let store = createStore(persistedReducer, window.devToolsExtension && window.devToolsExtension());
+let persister = persistStore(store);
+
+export { store, persister };
